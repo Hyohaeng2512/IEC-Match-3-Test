@@ -156,21 +156,39 @@ public class Board
     internal void Fill()
     {
         int totalCells = boardSizeX * boardSizeY;
-
-        int groupCount = totalCells / 3;
+        var allTypes = Enum.GetValues(typeof(NormalItem.eNormalType))
+                           .Cast<NormalItem.eNormalType>().ToList();
+        int typeCount = allTypes.Count;
 
         List<NormalItem.eNormalType> itemsToPlace = new List<NormalItem.eNormalType>();
-
-        for (int i = 0; i < groupCount; i++)
+        foreach (var type in allTypes)
         {
-            NormalItem.eNormalType type = Utils.GetRandomNormalTypeExcept(new NormalItem.eNormalType[0]); 
-                                                                             
             itemsToPlace.Add(type);
             itemsToPlace.Add(type);
             itemsToPlace.Add(type);
         }
 
-        itemsToPlace = itemsToPlace.OrderBy(x => UnityEngine.Random.value).ToList();
+        int cellsFilled = itemsToPlace.Count;
+        int remainingCells = totalCells - cellsFilled;
+
+        int groupsRemaining = remainingCells / 3;
+
+        for (int i = 0; i < groupsRemaining; i++)
+        {
+            NormalItem.eNormalType type = allTypes[UnityEngine.Random.Range(0, typeCount)];
+            itemsToPlace.Add(type);
+            itemsToPlace.Add(type);
+            itemsToPlace.Add(type);
+        }
+
+        remainingCells = totalCells - itemsToPlace.Count;
+        for (int i = 0; i < remainingCells; i++)
+        {
+            NormalItem.eNormalType type = allTypes[UnityEngine.Random.Range(0, typeCount)];
+            itemsToPlace.Add(type);
+        }
+
+        itemsToPlace = itemsToPlace.OrderBy(_ => UnityEngine.Random.value).ToList();
 
         int index = 0;
         for (int x = 0; x < boardSizeX; x++)
@@ -178,7 +196,6 @@ public class Board
             for (int y = 0; y < boardSizeY; y++)
             {
                 Cell cell = m_cells[x, y];
-
                 NormalItem item = new NormalItem();
                 item.SetType(itemsToPlace[index]);
                 item.SetView();
