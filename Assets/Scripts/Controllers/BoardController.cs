@@ -95,7 +95,7 @@ public class BoardController : MonoBehaviour
         }
     }
 
-    private bool IsEmpty()
+    public bool IsEmpty()
     {
         foreach (var cell in GetAllCells())
         {
@@ -125,7 +125,7 @@ public class BoardController : MonoBehaviour
         }
     }
 
-    private List<Cell> GetAllCells()
+    public List<Cell> GetAllCells()
     {
 
         List<Cell> cells = new List<Cell>();

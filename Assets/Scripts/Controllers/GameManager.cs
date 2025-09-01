@@ -1,8 +1,9 @@
-﻿using DG.Tweening;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
+using UnityEngine.Analytics;
 
 public class GameManager : MonoBehaviour
 {
@@ -154,7 +155,7 @@ public class GameManager : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
 
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.5f);
         if (!isWin)
         {
             State = eStateGame.GAME_OVER;
@@ -171,4 +172,53 @@ public class GameManager : MonoBehaviour
             m_levelCondition = null;
         }
     }
+
+    public void StartAutoplay()
+    {
+        StartCoroutine(AutoPlayRoutine());
+    }
+
+    private IEnumerator AutoPlayRoutine()
+    {
+        if (m_boardController == null || m_bottomBoardController == null)
+            yield break;
+
+        while (m_boardController != null && !m_boardController.IsEmpty() && State == eStateGame.GAME_STARTED)
+        {
+            List<Cell> cells = m_boardController.GetAllCells();
+            List<Cell> availableCells = cells.FindAll(c => c.Item != null);
+
+            if (availableCells.Count == 0)
+                yield break;
+
+            Cell firstCell = availableCells[UnityEngine.Random.Range(0, availableCells.Count)];
+            Item targetItem = firstCell.Item;
+
+            firstCell.Free();
+            m_bottomBoardController.ReceiveItem(targetItem);
+
+            yield return new WaitForSeconds(0.5f);
+
+            List<Cell> sameItems = availableCells.
+                FindAll(c => c.Item != null && c.Item.IsSameType(targetItem) && c != firstCell);
+
+            int picks = Mathf.Min(2, sameItems.Count);
+            for (int i = 0; i < picks; i++)
+            {
+                Cell cell = sameItems[i];
+                Item item = cell.Item;
+                cell.Free();
+                m_bottomBoardController.ReceiveItem(item);
+
+                yield return new WaitForSeconds(0.5f);
+            }
+        }
+
+        if (m_boardController.IsEmpty())
+        {
+            LevelWin();
+        }
+
+    }
+
 }

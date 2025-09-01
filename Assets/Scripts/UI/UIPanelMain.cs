@@ -10,24 +10,36 @@ public class UIPanelMain : MonoBehaviour, IMenu
 
     [SerializeField] private Button btnMoves;
 
+    [SerializeField] private Button btnAutoPlay;
+
     private UIMainManager m_mngr;
 
     private void Awake()
     {
         btnMoves.onClick.AddListener(OnClickMoves);
-        btnTimer.onClick.AddListener(OnClickTimer);
+        //btnTimer.onClick.AddListener(OnClickTimer);
+        btnAutoPlay.onClick.AddListener(OnClickAutoPlay);
     }
 
     private void OnDestroy()
     {
         if (btnMoves) btnMoves.onClick.RemoveAllListeners();
-        if (btnTimer) btnTimer.onClick.RemoveAllListeners();
+        //if (btnTimer) btnTimer.onClick.RemoveAllListeners();
+        if (btnAutoPlay) btnAutoPlay.onClick.RemoveAllListeners();
     }
 
     public void Setup(UIMainManager mngr)
     {
         m_mngr = mngr;
     }
+
+    private void OnClickAutoPlay()
+    {
+        Debug.Log("Click to AutoPlayButton");
+        m_mngr.LoadLevelMoves();
+        m_mngr.ToggleAutoPlay();
+    }
+
 
     private void OnClickTimer()
     {

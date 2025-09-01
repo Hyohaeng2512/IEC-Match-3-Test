@@ -191,7 +191,7 @@ public class BottomBoardController : MonoBehaviour
         }
     }
 
-    private bool IsBottomBoardFull()
+    public bool IsBottomBoardFull()
     {
         return !GetAllCells().Any(c => c.IsEmpty);
     }
