@@ -6,7 +6,6 @@ public class Constants
 
     public const string BOTTOM_BOARD_SETTING_PATH = "BottomBoardSettings";
 
-
     public const string PREFAB_CELL_BACKGROUND = "prefabs/cellBackground";
 
     public const string PREFAB_NORMAL_TYPE_ONE = "prefabs/itemNormal01";
@@ -28,4 +27,9 @@ public class Constants
     public const string PREFAB_BONUS_VERTICAL = "prefabs/itemBonusVertical";
 
     public const string PREFAB_BONUS_BOMB = "prefabs/itemBonusBomb";
+
+    public const string PREFAB_LOCATION_PATH = "Assets/Resources/prefabs";
+
+    public const string NEW_SKIN_LOCATION_PATH = "Assets/Textures/Fish";
+
 }
