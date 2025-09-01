@@ -98,6 +98,7 @@ public class GameManager : MonoBehaviour
         m_bottomBoardController.StartGame(this, m_bottomBoardSettings);
 
         m_bottomBoardController.IsBottomBoardFullEvent += GameOver;
+        m_boardController.IsBoardClearEvent += LevelWin;
 
         if (mode == eLevelMode.MOVES)
         {
@@ -112,12 +113,19 @@ public class GameManager : MonoBehaviour
 
         m_levelCondition.ConditionCompleteEvent += GameOver;
 
+        
+
         State = eStateGame.GAME_STARTED;
     }
 
     public void GameOver()
     {
-        StartCoroutine(WaitBoardController());
+        StartCoroutine(WaitBoardController(false));
+    }
+
+    public void LevelWin()
+    {
+        StartCoroutine(WaitBoardController(true));
     }
 
     internal void ClearLevel()
@@ -133,12 +141,13 @@ public class GameManager : MonoBehaviour
         {
             m_bottomBoardController.Clear();
             m_bottomBoardController.IsBottomBoardFullEvent -= GameOver;
+
             Destroy(m_bottomBoardController.gameObject);
             m_bottomBoardController = null;
         }
     }
 
-    private IEnumerator WaitBoardController()
+    private IEnumerator WaitBoardController(bool isWin = false)
     {
         while (m_boardController.IsBusy)
         {
@@ -146,13 +155,18 @@ public class GameManager : MonoBehaviour
         }
 
         yield return new WaitForSeconds(1f);
-
-        State = eStateGame.GAME_OVER;
-
+        if (!isWin)
+        {
+            State = eStateGame.GAME_OVER;
+        }
+        else
+        {
+            State = eStateGame.LEVEL_WIN;
+        }
         if (m_levelCondition != null)
         {
             m_levelCondition.ConditionCompleteEvent -= GameOver;
-
+            m_boardController.IsBoardClearEvent -= LevelWin;
             Destroy(m_levelCondition);
             m_levelCondition = null;
         }

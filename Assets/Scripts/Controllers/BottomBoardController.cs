@@ -71,13 +71,12 @@ public class BottomBoardController : MonoBehaviour
         DOVirtual.DelayedCall(0.3f, () =>
         {
             ClearItemsAndResort();
+
+            if (IsBottomBoardFull())
+            {
+                IsBottomBoardFullEvent();
+            }
         });
-
-        if (IsBottomBoardFull())
-        {
-            IsBottomBoardFullEvent();
-        }
-
     }
 
     private List<Cell> GetAllCells()
