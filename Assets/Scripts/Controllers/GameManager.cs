@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Analytics;
@@ -178,7 +179,7 @@ public class GameManager : MonoBehaviour
         StartCoroutine(AutoPlayRoutine());
     }
 
-    private IEnumerator AutoPlayRoutine()
+    private IEnumerator AutoPlayRoutine(float duration = 0.5f)
     {
         if (m_boardController == null || m_bottomBoardController == null)
             yield break;
@@ -197,7 +198,7 @@ public class GameManager : MonoBehaviour
             firstCell.Free();
             m_bottomBoardController.ReceiveItem(targetItem);
 
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(duration);
 
             List<Cell> sameItems = availableCells.
                 FindAll(c => c.Item != null && c.Item.IsSameType(targetItem) && c != firstCell);
@@ -210,7 +211,7 @@ public class GameManager : MonoBehaviour
                 cell.Free();
                 m_bottomBoardController.ReceiveItem(item);
 
-                yield return new WaitForSeconds(0.5f);
+                yield return new WaitForSeconds(duration);
             }
         }
 
@@ -220,5 +221,43 @@ public class GameManager : MonoBehaviour
         }
 
     }
+    public void StartAutoLose()
+    {
+        StartCoroutine(AutoLoseRoutine());
+    }
 
+    private IEnumerator AutoLoseRoutine(float duration = 0.5f)
+    {
+        if (m_boardController == null || m_bottomBoardController == null)
+            yield break;
+
+        List<Item> pickedItems = new List<Item>();
+
+        while (m_boardController != null && !m_boardController.IsEmpty() && State == GameManager.eStateGame.GAME_STARTED)
+        {
+            List<Cell> cells = m_boardController.GetAllCells();
+
+            List<Cell> availableCells = cells.
+                FindAll(c => c.Item != null && !pickedItems.Exists(i => i.IsSameType(c.Item)));
+
+            if (availableCells.Count == 0)
+                yield break;
+
+            int index = UnityEngine.Random.Range(0, availableCells.Count);
+            Cell cellToPick = availableCells[index];
+            Item targetItem = cellToPick.Item;
+
+            cellToPick.Free();
+            m_bottomBoardController.ReceiveItem(targetItem);
+            pickedItems.Add(targetItem);
+
+            yield return new WaitForSeconds(duration);
+        }
+
+        if (m_bottomBoardController.IsBottomBoardFull())
+        {
+            GameOver();
+        }
+
+    }
 }
