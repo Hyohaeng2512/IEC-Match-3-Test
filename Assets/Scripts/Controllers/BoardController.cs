@@ -145,4 +145,9 @@ public class BoardController : MonoBehaviour
         m_board.Clear();
     }
 
+    public Cell GetEmptyCell()
+    {
+        return GetAllCells().FirstOrDefault(cell => cell.Item == null);
+    }
+
 }

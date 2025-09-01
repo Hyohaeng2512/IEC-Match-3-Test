@@ -45,12 +45,17 @@ public class GameManager : MonoBehaviour
 
     private BoardController m_boardController;
 
+    public BoardController GetBoardController() => m_boardController;
+
     private BottomBoardController m_bottomBoardController;
     public BottomBoardController GetBottomBoardController() => m_bottomBoardController;
 
     private UIMainManager m_uiMenu;
 
     private LevelCondition m_levelCondition;
+
+    private eLevelMode m_currentMode;
+    public eLevelMode CurrentMode => m_currentMode;
 
     private void Awake()
     {
@@ -99,7 +104,13 @@ public class GameManager : MonoBehaviour
         m_boardController.StartGame(this, m_gameSettings);
         m_bottomBoardController.StartGame(this, m_bottomBoardSettings);
 
-        m_bottomBoardController.IsBottomBoardFullEvent += GameOver;
+        m_currentMode = mode;
+
+        if (mode != eLevelMode.TIMER) 
+        {
+            m_bottomBoardController.IsBottomBoardFullEvent += GameOver;
+        }
+        
         m_boardController.IsBoardClearEvent += LevelWin;
 
         if (mode == eLevelMode.MOVES)
@@ -110,7 +121,7 @@ public class GameManager : MonoBehaviour
         else if (mode == eLevelMode.TIMER)
         {
             m_levelCondition = this.gameObject.AddComponent<LevelTime>();
-            m_levelCondition.Setup(m_gameSettings.LevelMoves, m_uiMenu.GetLevelConditionView(), this);
+            m_levelCondition.Setup(m_gameSettings.LevelTime, m_uiMenu.GetLevelConditionView(), this);
         }
 
         m_levelCondition.ConditionCompleteEvent += GameOver;

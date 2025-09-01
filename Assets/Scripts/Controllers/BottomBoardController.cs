@@ -26,6 +26,13 @@ public class BottomBoardController : MonoBehaviour
     {
         if (m_gameOver) return;
         if (IsBusy) return;
+
+        if (m_gameManager.CurrentMode != GameManager.eLevelMode.TIMER) return;
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            HandlePlayerClick();
+        }
     }
 
     public void StartGame(GameManager gameManager, BottomBoardSettings bottomBoardSettings)
@@ -196,7 +203,37 @@ public class BottomBoardController : MonoBehaviour
         return !GetAllCells().Any(c => c.IsEmpty);
     }
 
-    
+    private void HandlePlayerClick()
+    {
+        Vector3 worldPos = m_cam.ScreenToWorldPoint(Input.mousePosition);
+        Vector2 pos = new Vector2(worldPos.x, worldPos.y);
+
+        RaycastHit2D hit = Physics2D.Raycast(pos, Vector2.zero);
+        if (hit.collider != null)
+        {
+            Cell clickedCell = hit.collider.GetComponent<Cell>();
+            if (clickedCell != null && !clickedCell.IsEmpty)
+            {
+                Item item = clickedCell.Item;
+                clickedCell.Free();
+                ReturnItemToBoard(item);
+            }
+        }
+    }
+
+    public void ReturnItemToBoard(Item item)
+    {
+        if (item == null) return;
+
+        Cell emptyCell = m_gameManager.GetBoardController().GetEmptyCell();
+        if (emptyCell != null)
+        {
+            item.SetCell(emptyCell);
+            emptyCell.Assign(item);
+            item.AnimationMoveToPosition();
+        }
+    }
+
 
 
 }
