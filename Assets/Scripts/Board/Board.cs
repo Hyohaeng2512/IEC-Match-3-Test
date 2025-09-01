@@ -116,40 +116,78 @@ public class Board
         }
     }
 
+    //internal void Fill()
+    //{
+    //    for (int x = 0; x < boardSizeX; x++)
+    //    {
+    //        for (int y = 0; y < boardSizeY; y++)
+    //        {
+    //            Cell cell = m_cells[x, y];
+    //            NormalItem item = new NormalItem();
+
+    //            List<NormalItem.eNormalType> types = new List<NormalItem.eNormalType>();
+    //            if (cell.NeighbourBottom != null)
+    //            {
+    //                NormalItem nitem = cell.NeighbourBottom.Item as NormalItem;
+    //                if (nitem != null)
+    //                {
+    //                    types.Add(nitem.ItemType);
+    //                }
+    //            }
+
+    //            if (cell.NeighbourLeft != null)
+    //            {
+    //                NormalItem nitem = cell.NeighbourLeft.Item as NormalItem;
+    //                if (nitem != null)
+    //                {
+    //                    types.Add(nitem.ItemType);
+    //                }
+    //            }
+
+    //            item.SetType(Utils.GetRandomNormalTypeExcept(types.ToArray()));
+    //            item.SetView();
+    //            item.SetViewRoot(m_root);
+
+    //            cell.Assign(item);
+    //            cell.ApplyItemPosition(false);
+    //        }
+    //    }
+    //}
     internal void Fill()
     {
+        int totalCells = boardSizeX * boardSizeY;
+
+        int groupCount = totalCells / 3;
+
+        List<NormalItem.eNormalType> itemsToPlace = new List<NormalItem.eNormalType>();
+
+        for (int i = 0; i < groupCount; i++)
+        {
+            NormalItem.eNormalType type = Utils.GetRandomNormalTypeExcept(new NormalItem.eNormalType[0]); 
+                                                                             
+            itemsToPlace.Add(type);
+            itemsToPlace.Add(type);
+            itemsToPlace.Add(type);
+        }
+
+        itemsToPlace = itemsToPlace.OrderBy(x => UnityEngine.Random.value).ToList();
+
+        int index = 0;
         for (int x = 0; x < boardSizeX; x++)
         {
             for (int y = 0; y < boardSizeY; y++)
             {
                 Cell cell = m_cells[x, y];
+
                 NormalItem item = new NormalItem();
-
-                List<NormalItem.eNormalType> types = new List<NormalItem.eNormalType>();
-                if (cell.NeighbourBottom != null)
-                {
-                    NormalItem nitem = cell.NeighbourBottom.Item as NormalItem;
-                    if (nitem != null)
-                    {
-                        types.Add(nitem.ItemType);
-                    }
-                }
-
-                if (cell.NeighbourLeft != null)
-                {
-                    NormalItem nitem = cell.NeighbourLeft.Item as NormalItem;
-                    if (nitem != null)
-                    {
-                        types.Add(nitem.ItemType);
-                    }
-                }
-
-                item.SetType(Utils.GetRandomNormalTypeExcept(types.ToArray()));
+                item.SetType(itemsToPlace[index]);
                 item.SetView();
                 item.SetViewRoot(m_root);
 
                 cell.Assign(item);
                 cell.ApplyItemPosition(false);
+
+                index++;
             }
         }
     }
