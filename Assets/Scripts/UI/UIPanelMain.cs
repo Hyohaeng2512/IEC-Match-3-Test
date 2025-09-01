@@ -12,6 +12,8 @@ public class UIPanelMain : MonoBehaviour, IMenu
 
     [SerializeField] private Button btnAutoPlay;
 
+    [SerializeField] private Button btnAutoLose;
+
     private UIMainManager m_mngr;
 
     private void Awake()
@@ -19,6 +21,7 @@ public class UIPanelMain : MonoBehaviour, IMenu
         btnMoves.onClick.AddListener(OnClickMoves);
         //btnTimer.onClick.AddListener(OnClickTimer);
         btnAutoPlay.onClick.AddListener(OnClickAutoPlay);
+        btnAutoLose.onClick.AddListener (OnClickAutoLose);
     }
 
     private void OnDestroy()
@@ -26,6 +29,7 @@ public class UIPanelMain : MonoBehaviour, IMenu
         if (btnMoves) btnMoves.onClick.RemoveAllListeners();
         //if (btnTimer) btnTimer.onClick.RemoveAllListeners();
         if (btnAutoPlay) btnAutoPlay.onClick.RemoveAllListeners();
+        if (btnAutoLose) btnAutoLose.onClick.RemoveAllListeners();
     }
 
     public void Setup(UIMainManager mngr)
@@ -33,9 +37,14 @@ public class UIPanelMain : MonoBehaviour, IMenu
         m_mngr = mngr;
     }
 
+    private void OnClickAutoLose() 
+    {
+        m_mngr.LoadLevelMoves();
+        m_mngr.ToggleAutoLose();
+    }
+
     private void OnClickAutoPlay()
     {
-        Debug.Log("Click to AutoPlayButton");
         m_mngr.LoadLevelMoves();
         m_mngr.ToggleAutoPlay();
     }
