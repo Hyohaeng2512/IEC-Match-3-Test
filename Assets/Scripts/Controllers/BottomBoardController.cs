@@ -233,7 +233,4 @@ public class BottomBoardController : MonoBehaviour
             item.AnimationMoveToPosition();
         }
     }
-
-
-
 }
