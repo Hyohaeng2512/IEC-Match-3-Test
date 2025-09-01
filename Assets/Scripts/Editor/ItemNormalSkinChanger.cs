@@ -9,8 +9,8 @@ public class ItemNormalSkinChanger
     [MenuItem("Tools/Change ItemNormal Skins")]
     public static void ChangeSkins()
     {
-        string prefabsFolderPath = "Assets/Resources/prefabs";
-        string spritesFolderPath = "Assets/Textures/Fish";
+        string prefabsFolderPath = Constants.PREFAB_LOCATION_PATH;
+        string spritesFolderPath = Constants.NEW_SKIN_LOCATION_PATH;
 
         string[] spriteGuids = AssetDatabase.FindAssets("t:Sprite", new[] { spritesFolderPath });
         Sprite[] sprites = spriteGuids
