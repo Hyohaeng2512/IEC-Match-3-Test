@@ -21,6 +21,7 @@ public class GameManager : MonoBehaviour
         GAME_STARTED,
         PAUSE,
         GAME_OVER,
+        LEVEL_WIN
     }
 
     private eStateGame m_state;
@@ -96,6 +97,8 @@ public class GameManager : MonoBehaviour
         m_boardController.StartGame(this, m_gameSettings);
         m_bottomBoardController.StartGame(this, m_bottomBoardSettings);
 
+        m_bottomBoardController.IsBottomBoardFullEvent += GameOver;
+
         if (mode == eLevelMode.MOVES)
         {
             m_levelCondition = this.gameObject.AddComponent<LevelMoves>();
@@ -129,7 +132,8 @@ public class GameManager : MonoBehaviour
         if (m_bottomBoardController)
         {
             m_bottomBoardController.Clear();
-            Destroy(m_boardController.gameObject);
+            m_bottomBoardController.IsBottomBoardFullEvent -= GameOver;
+            Destroy(m_bottomBoardController.gameObject);
             m_bottomBoardController = null;
         }
     }

@@ -7,6 +7,8 @@ using UnityEngine;
 public class BottomBoardController : MonoBehaviour
 {
     public event Action OnMoveEvent = delegate { };
+
+    public event Action IsBottomBoardFullEvent = delegate { };
     public bool IsBusy { get; private set; }
 
     private Board m_board;
@@ -48,19 +50,14 @@ public class BottomBoardController : MonoBehaviour
         if (item == null) return;
 
         Cell empty = GetAllCells().FirstOrDefault(c => c.IsEmpty);
-        if (empty == null)
-        {
-            Debug.Log("Bottom board is full!");
-            return;
-        }
 
         empty.Assign(item);
 
         item.SetViewRoot(this.transform);
 
-        item.AnimationMoveToPosition(0.3f);
+        SortItemsStableByType();
 
-        //item.View.DOScale(Vector3.one, 0.2f).From(Vector3.one * 0.8f);
+        item.AnimationMoveToPosition(0.3f);
 
         DOVirtual.DelayedCall(0.3f, () =>
         {
@@ -75,6 +72,12 @@ public class BottomBoardController : MonoBehaviour
         {
             ClearItemsAndResort();
         });
+
+        if (IsBottomBoardFull())
+        {
+            IsBottomBoardFullEvent();
+        }
+
     }
 
     private List<Cell> GetAllCells()
@@ -188,4 +191,13 @@ public class BottomBoardController : MonoBehaviour
             item.AnimationMoveToPosition(moveDuration);
         }
     }
+
+    private bool IsBottomBoardFull()
+    {
+        return !GetAllCells().Any(c => c.IsEmpty);
+    }
+
+    
+
+
 }

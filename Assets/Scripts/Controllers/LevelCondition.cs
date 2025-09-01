@@ -31,6 +31,7 @@ public class LevelCondition : MonoBehaviour
 
     protected void OnConditionComplete()
     {
+        if (m_conditionCompleted) return;
         m_conditionCompleted = true;
 
         ConditionCompleteEvent();
@@ -38,6 +39,7 @@ public class LevelCondition : MonoBehaviour
 
     protected virtual void OnDestroy()
     {
-
+        
     }
+
 }

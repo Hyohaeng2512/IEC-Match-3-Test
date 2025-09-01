@@ -69,6 +69,10 @@ public class UIMainManager : MonoBehaviour
             case GameManager.eStateGame.GAME_OVER:
                 ShowMenu<UIPanelGameOver>();
                 break;
+            case GameManager.eStateGame.LEVEL_WIN:
+                ShowMenu<UIPanelLevelWin>();
+                break;
+
         }
     }
 
