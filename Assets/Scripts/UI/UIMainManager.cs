@@ -127,4 +127,9 @@ public class UIMainManager : MonoBehaviour
     {
         m_gameManager.StartAutoplay();
     }
+
+    internal void ToggleAutoLose() 
+    {
+        m_gameManager.StartAutoLose();
+    }
 }
