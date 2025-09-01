@@ -28,16 +28,16 @@ public class Item
 
     protected virtual string GetPrefabName() { return string.Empty; }
 
-    public virtual void SetCell(Cell cell)
+    public virtual void SetCell(Cell cell, bool animate = false)
     {
         Cell = cell;
     }
 
-    internal void AnimationMoveToPosition()
+    internal void AnimationMoveToPosition(float duration = 0.3f)
     {
-        if (View == null) return;
+        if (View == null || Cell == null) return;
 
-        View.DOMove(Cell.transform.position, 0.2f);
+        View.DOMove(Cell.transform.position, duration).SetEase(Ease.OutBack);
     }
 
     public void SetViewPosition(Vector3 pos)

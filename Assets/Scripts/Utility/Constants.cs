@@ -1,6 +1,11 @@
-﻿public class Constants 
+﻿using System.Runtime.CompilerServices;
+
+public class Constants 
 {
     public const string GAME_SETTINGS_PATH = "gamesettings";
+
+    public const string BOTTOM_BOARD_SETTING_PATH = "BottomBoardSettings";
+
 
     public const string PREFAB_CELL_BACKGROUND = "prefabs/cellBackground";
 

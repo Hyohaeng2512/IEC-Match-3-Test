@@ -38,8 +38,12 @@ public class GameManager : MonoBehaviour
 
     private GameSettings m_gameSettings;
 
+    private BottomBoardSettings m_bottomBoardSettings;
 
     private BoardController m_boardController;
+
+    private BottomBoardController m_bottomBoardController;
+    public BottomBoardController GetBottomBoardController() => m_bottomBoardController;
 
     private UIMainManager m_uiMenu;
 
@@ -50,6 +54,8 @@ public class GameManager : MonoBehaviour
         State = eStateGame.SETUP;
 
         m_gameSettings = Resources.Load<GameSettings>(Constants.GAME_SETTINGS_PATH);
+        m_bottomBoardSettings = Resources.Load<BottomBoardSettings>(Constants.BOTTOM_BOARD_SETTING_PATH);
+
 
         m_uiMenu = FindObjectOfType<UIMainManager>();
         m_uiMenu.Setup(this);
@@ -64,6 +70,7 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         if (m_boardController != null) m_boardController.Update();
+        if (m_bottomBoardController != null) m_bottomBoardController.Update();
     }
 
 
@@ -84,7 +91,10 @@ public class GameManager : MonoBehaviour
     public void LoadLevel(eLevelMode mode)
     {
         m_boardController = new GameObject("BoardController").AddComponent<BoardController>();
+        m_bottomBoardController = new GameObject("BottomBoardController").AddComponent<BottomBoardController>();
+
         m_boardController.StartGame(this, m_gameSettings);
+        m_bottomBoardController.StartGame(this, m_bottomBoardSettings);
 
         if (mode == eLevelMode.MOVES)
         {
@@ -114,6 +124,13 @@ public class GameManager : MonoBehaviour
             m_boardController.Clear();
             Destroy(m_boardController.gameObject);
             m_boardController = null;
+        }
+
+        if (m_bottomBoardController)
+        {
+            m_bottomBoardController.Clear();
+            Destroy(m_boardController.gameObject);
+            m_bottomBoardController = null;
         }
     }
 
